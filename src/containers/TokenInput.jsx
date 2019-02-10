@@ -9,7 +9,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import DirectionsIcon from "@material-ui/icons/Directions";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { playerActionCreator } from "../actionCreators";
+import { playerActionCreator, playActionCreator } from "../actionCreators";
 import React, { Component } from "react";
 import { tokenStyles } from "./theme";
 
@@ -40,7 +40,7 @@ class TokenInput extends Component {
     return (
       <Paper className={classes.root} elevation={1}>
         <IconButton className={classes.iconButton} aria-label="Menu">
-          <MenuIcon />
+          <MenuIcon onClick={()=>{this.props.play(this.props.playerinstance)}}/>
         </IconButton>
         <InputBase
           className={classes.input}
@@ -65,11 +65,12 @@ class TokenInput extends Component {
   }
 }
 const mapStatetoProps = state => ({
-  player: state.player
+  playerinstance: state.player || null
 });
 
 const mapDispatchToProps = dispatch => ({
-  auth: token => dispatch(playerActionCreator(token))
+  auth: token => dispatch(playerActionCreator(token)),
+  play: (playerinstance)=> dispatch(playActionCreator(playerinstance))
 });
 export default withStyles(tokenStyles)(
   withRouter(

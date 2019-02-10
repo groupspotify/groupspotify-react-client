@@ -13,7 +13,8 @@ export const initialState = {
     position: 0,
     duration: 0
   },
-  queue: {}
+  queue: {},
+  link:null
 };
 
 const songInfoReducer = (state = false, action) => {
@@ -31,6 +32,16 @@ const queueReducer = (state = null, action) => {
   return state;
 };
 
+const linkReducer = (state = null, action)=>{
+  switch(action.type){
+    case actions.SLAVE_LINK:
+    console.log(action.payload)
+      return action.payload;
+    default:
+      return null;
+  }
+}
+
 const playerReducer = (state = null, action) => {
   //TODO
   switch (action.type) {
@@ -39,7 +50,7 @@ const playerReducer = (state = null, action) => {
     case actions.AUTH_STARTED:
       return state;
     case actions.AUTH_SUCCEEDED:
-      return action.payload;
+      return action.payload||null;
     default:
       return state;
   }
@@ -50,5 +61,6 @@ export default history =>
     router: connectRouter(history),
     error: errorReducer,
     songInfo: songInfoReducer,
-    player: playerReducer
+    player: playerReducer,
+    link:linkReducer
   });

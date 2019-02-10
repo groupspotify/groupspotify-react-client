@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -9,6 +9,9 @@ import Typography from '@material-ui/core/Typography';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
+import { togglePlayPauseActionCreator, prevActionCreator, nextActionCreator } from "../actionCreators";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 const styles = theme => ({
   card: {
@@ -37,28 +40,34 @@ const styles = theme => ({
   
 });
 
-function MediaControlCard(props) {
-  const { classes, theme } = props;
 
-  return (
-    <Card className={classes.card}>
+
+class Playback extends Component {
+constructor(props){
+  super(props)
+}
+
+  render() {
+    const {classes, theme} = this.props
+    return (
+      <Card className={classes.card}>
       <div className={classes.details}>
         <CardContent className={classes.content}>
           <Typography component="h5" variant="h5">
             Live From Space
-          </Typography>
+          </Typography> 
           <Typography variant="subtitle1" color="textSecondary">
             Mac Miller
           </Typography>
         </CardContent>
         <div className={classes.controls}>
-          <IconButton aria-label="Previous">
+          <IconButton aria-label="Previous" onClick={()=>{this.props.prev(this.props.playerinstance)}}>
             {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
           </IconButton>
-          <IconButton aria-label="Play/pause">
+          <IconButton aria-label="Play/pause" onClick={()=>{this.props.toggle(this.props.playerinstance)}}>
             <PlayArrowIcon className={classes.playIcon} />
           </IconButton>
-          <IconButton aria-label="Next">
+          <IconButton aria-label="Next" onClick={()=>{this.props.next(this.props.playerinstance)}}>
             {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
           </IconButton>
         </div>
@@ -69,12 +78,30 @@ function MediaControlCard(props) {
         title="Live from space album cover"
       />
     </Card>
-  );
+    )
+  }
 }
 
-MediaControlCard.propTypes = {
+
+const mapStatetoProps = state => ({
+  playerinstance: state.player || null
+});
+const mapDispatchToProps = dispatch => ({
+  toggle: (playerinstance)=> dispatch(togglePlayPauseActionCreator(playerinstance)),
+  next: (playerinstance) => dispatch(nextActionCreator(playerinstance)),
+  prev: (playerinstance) => dispatch(prevActionCreator(playerinstance))
+});
+
+Playback.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(MediaControlCard);
+export default withStyles(styles , { withTheme: true })(
+  withRouter(
+    connect(
+      mapStatetoProps,
+      mapDispatchToProps
+    )(Playback)
+  )
+);
