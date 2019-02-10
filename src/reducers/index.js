@@ -28,7 +28,19 @@ const errorReducer = (state = false, action) => {
 
 const queueReducer = (state = null, action) => {
   //TODO. Send message to Flask with the new queue
-  return state;
+  switch(action.type){
+    case actions.UPDATE_QUEUE:
+    if(!([action.payload] in state)){
+      state[action.payload] = 0;
+    }
+      state[action.payload] = state[action.payload] +1 
+      
+      let newq = state
+      console.log(newq)
+      return {...state}
+    default:
+      return state
+    }
 };
 
 const linkReducer = (state = null, action)=>{
@@ -62,5 +74,6 @@ export default history =>
     // songInfo: songInfoReducer,
     player: playerReducer,
     link:linkReducer,
-    gid: gidReducer
+    gid: gidReducer,
+    queue: queueReducer
   });

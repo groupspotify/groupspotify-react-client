@@ -1,57 +1,8 @@
 import actions from "../actions";
 import solace from "solclientjs";
+import TopicSubscriber from './subscriber'
 //solace = require('solclientjs').debug;
 const factoryProps = new solace.SolclientFactoryProperties();
-const TopicSubscriber = function(solaceModule, topicName) {
-  "use strict";
-  var solace = solaceModule;
-  var subscriber = {};
-  subscriber.session = null;
-  subscriber.topicName = topicName;
-  subscriber.subscribed = false;
-
-  // Logger
-  subscriber.log = function(line) {
-    var now = new Date();
-    var time = [
-      ("0" + now.getHours()).slice(-2),
-      ("0" + now.getMinutes()).slice(-2),
-      ("0" + now.getSeconds()).slice(-2)
-    ];
-    var timestamp = "[" + time.join(":") + "] ";
-    console.log(timestamp + line);
-  };
-
-  subscriber.subscribe = function() {
-    if (subscriber.session !== null) {
-      if (subscriber.subscribed) {
-        subscriber.log(
-          'Already subscribed to "' +
-            subscriber.topicName +
-            '" and ready to receive messages.'
-        );
-      } else {
-        subscriber.log("Subscribing to topic: " + subscriber.topicName);
-        try {
-          subscriber.session.subscribe(
-            solace.SolclientFactory.createTopicDestination(
-              subscriber.topicName
-            ),
-            true, // generate confirmation when subscription is added successfully
-            subscriber.topicName, // use topic name as correlation key
-            10000 // 10 seconds timeout for this operation
-          );
-        } catch (error) {
-          subscriber.log(error.toString());
-        }
-      }
-    } else {
-      subscriber.log(
-        "Cannot subscribe because not connected to Solace message router."
-      );
-    }
-  };
-};
 factoryProps.profile = solace.SolclientFactoryProfiles.version10;
 solace.SolclientFactory.init(factoryProps);
 
@@ -72,7 +23,7 @@ const play = ({
     });
   });
 };
-
+var subscriber;
 export const playerActionCreator = token => async dispatch => {
   dispatch({
     type: actions.AUTH_STARTED
@@ -105,74 +56,28 @@ export const playerActionCreator = token => async dispatch => {
     });
 
     // Ready
-    var topicName;
+    var d = new Date();
+    var topicName = d.getTime().toString();
     player.on("ready", data => {
       console.log("Let the music play on!");
-      var d = new Date();
-      var n = d.getTime();
-      window.topicName = n;
       // group id
-      let link = "http://localhost:3000/slave?GID=" + n;
+      let link = "http://localhost:3000/slave?gid=" + topicName;
       dispatch({
         type: actions.SLAVE_LINK,
         payload: link
       });
       dispatch({
         type: actions.UPDATE_GID,
-        payload: n
+        payload: topicName
       });
-      var subscriber = new TopicSubscriber(solace, n);
-      subscriber.session = solace.SolclientFactory.createSession({
-        // solace.SessionProperties
-        url: "ws://mr4b11zr9cb.messaging.mymaas.net:80",
-        vpnName: "msgvpn-4b11zr9bh",
-        userName: "solace-cloud-client",
-        password: "rr87cgf6d4qi9d5fqiun1sf1uv"
-      });
-      subscriber.session.on(
-        solace.SessionEventCode.SUBSCRIPTION_ERROR,
-        function(sessionEvent) {
-          console.log(
-            "Cannot subscribe to topic: " + sessionEvent.correlationKey
-          );
-        }
-      );
-      subscriber.session.on(solace.SessionEventCode.SUBSCRIPTION_OK, function(
-        sessionEvent
-      ) {
-        console.log(
-          "Successfully changed topic: " + sessionEvent.correlationKey
-        );
-      });
-      // define message event listener
-      subscriber.session.on(solace.SessionEventCode.MESSAGE, function(message) {
-        console.log(
-          'Received message: "' +
-            message.getBinaryAttachment() +
-            '", details:\n' +
-            message.dump()
-        );
-      });
-      subscriber.session.on(solace.SessionEventCode.UP_NOTICE, sessionEvent => {
-        // subscriber.log('=== Successfully connected and ready to subscribe. ===');
 
-        console.log("Subscribing to topic: " + subscriber.topicName);
-        try {
-          subscriber.session.subscribe(
-            solace.SolclientFactory.createTopicDestination("topic"),
-            true, // generate confirmation when subscription is added successfully
-            "topic", // use topic name as correlation key
-            10000 // 10 seconds timeout for this operation
-          );
-        } catch (error) {
-          console.log(error.toString());
-        }
-      });
-      try {
-        subscriber.session.connect();
-      } catch (error) {
-        subscriber.log(error.toString());
-      }
+
+    // create the subscriber, specifying the name of the subscription topic
+    subscriber = new TopicSubscriber(solace, topicName);
+
+    // subscribe to messages on Solace message router
+    subscriber.run();
+      
     });
 
     if (await player.connect()) {
@@ -235,3 +140,17 @@ export const prevActionCreator = playerInstance => async dispatch => {
     console.log("Set to previous track!");
   });
 };
+
+export const gidActionCreator = gid => async dispatch =>{
+  dispatch({
+    type: actions.UPDATE_GID,
+    payload:gid
+  });
+}
+export const initilizeSlave = gid => dispatch =>{
+  // create the subscriber, specifying the name of the subscription topic
+  var subscriber = new TopicSubscriber(solace, gid);
+  // subscribe to messages on Solace message router
+  subscriber.run();
+
+}

@@ -8,5 +8,6 @@ export default {
     SLAVE_LINK:'SLAVE_LINK',
     UPDATE_GID:'UPDATE_GID',
     DELETE_GID:'DELETE_GID',
+    UPDATE_QUEUE:'UPDATE_QUEUE'
   };
   

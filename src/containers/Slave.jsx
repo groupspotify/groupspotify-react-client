@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import Playback from './Playback';
+import { BrowserRouter, Route, withRouter, Switch } from 'react-router-dom';
 import {
     MuiThemeProvider,
     createMuiTheme
@@ -12,6 +13,7 @@ import SimpleList from './SimpleList';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import qs from 'qs';
+import { gidActionCreator, initilizeSlave } from "../actionCreators";
 
 
 const theme = createMuiTheme({
@@ -55,10 +57,15 @@ const styles = theme => ({
 class Slave extends Component {
     constructor(props){
         super(props);
+        this.state={
+            input:[]
+        }
     }
     UNSAFE_componentWillMount(){
-        let GID = qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).GID
-        console.log(GID);
+        let gid = qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).gid
+        this.props.updateGid(gid);
+        this.props.init(gid);
+        console.log(gid);
     }
     render(){
       const { classes } = this.props;  
@@ -84,6 +91,8 @@ class Slave extends Component {
                             label="Request a song"
                             placeholder="Despacito"
                             className={classes.textField}
+                            value={this.state.input}
+                            onChange={(event)=>{this.setState({input:event.target.value})}}
                             margin="normal"
                         />
                         
@@ -102,4 +111,22 @@ class Slave extends Component {
     
 }
 
-export default withStyles(styles)(Slave);
+
+
+const mapStatetoProps = state => ({
+    playerinstance: state.player || null
+  });
+  
+  const mapDispatchToProps = dispatch => ({
+    init: (gid) => dispatch(initilizeSlave(gid)),
+    updateGid: (gid)=> dispatch(gidActionCreator(gid))
+  });
+  export default withStyles(styles)(
+    withRouter(
+      connect(
+        mapStatetoProps,
+        mapDispatchToProps
+      )(Slave)
+    )
+  );
+  
