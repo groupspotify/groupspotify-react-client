@@ -1,38 +1,24 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import Playback from './containers/Playback';
-import {  
-  MuiThemeProvider,
-  createMuiTheme
-} from '@material-ui/core/styles';
-import { Route, withRouter } from 'react-router-dom';
-import AppBar from './containers/AppBar'
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import Playback from "./containers/Playback";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { withRouter } from "react-router-dom";
+import AppBar from "./containers/AppBar";
+import Input from "./containers/TokenInput";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import { appStyles } from "./containers/theme";
+import Typography from "@material-ui/core/Typography";
 
 const theme = createMuiTheme({
   typography: {
     useNextVariants: true
   },
-  shadows: ['none'],
+  shadows: ["none"]
 });
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-  
-});
-
 
 class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       token: "",
@@ -44,32 +30,43 @@ class App extends Component {
       albumName: "Album Name",
       playing: false,
       position: 0,
-      duration: 0,
+      duration: 0
     };
   }
   render() {
     const { classes } = this.props;
     return (
       <MuiThemeProvider theme={theme}>
-      <div className="App">
-      <AppBar />
-        <Grid container spacing={24} direction={'row'}>
-          <Grid item xs={12} lg ={12}/>
-          <Grid item xs={12} lg ={6}>
-            <Playback/>
+        <div className="App">
+          <AppBar />
+          <Grid container spacing={24}>
+            <Grid item xs={12} lg={12}>
+              <Typography component="h5" variant="h5">
+                Get your token from{" "}
+                <a href="https://developer.spotify.com/documentation/web-playback-sdk/quick-start/#">
+                  {" "}
+                  here{" "}
+                </a>
+              </Typography>
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <Playback />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <Input />
+            </Grid>
           </Grid>
-        </Grid>
-      </div>
+        </div>
       </MuiThemeProvider>
     );
   }
 }
 
-export default withStyles(styles)(
+export default withStyles(appStyles)(
   withRouter(
     connect(
       null,
       null
     )(App)
-    )
+  )
 );
