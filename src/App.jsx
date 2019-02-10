@@ -17,6 +17,8 @@ const theme = createMuiTheme({
   shadows: ["none"]
 });
 
+
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +35,27 @@ class App extends Component {
       duration: 0
     };
   }
+
+  renderLinks() {
+    if(this.props.slave_link==null || this.props.slave_link ==""){
+      return(
+      <div>
+        Get your token from
+        <a href="https://developer.spotify.com/documentation/web-playback-sdk/quick-start/#" target="_blank">
+          here
+        </a>
+        </div>);
+    }else{
+      return(
+      <div>
+        Send this link to your friends!
+        <a href={this.props.slave_link} target="_blank">
+          here
+        </a>
+        </div>);
+    }
+  }
+  
   render() {
     const { classes } = this.props;
     return (
@@ -41,19 +64,19 @@ class App extends Component {
           <AppBar />
           <Grid container spacing={24}>
             <Grid item xs={12} lg={12}>
-              <Typography component="h5" variant="h5">
-                Get your token from{" "}
-                <a href="https://developer.spotify.com/documentation/web-playback-sdk/quick-start/#">
-                  {" "}
-                  here{" "}
-                </a>
-              </Typography>
+              
             </Grid>
             <Grid item xs={12} lg={6}>
               <Playback />
             </Grid>
             <Grid item xs={12} lg={6}>
               <Input />
+              <Typography component="h5" variant="h5">
+              {this.renderLinks()}
+
+                
+
+              </Typography>
             </Grid>
           </Grid>
         </div>
@@ -61,6 +84,10 @@ class App extends Component {
     );
   }
 }
+
+const mapStatetoProps = state => ({
+  slave_link: state.link || null
+});
 
 export default withStyles(appStyles)(
   withRouter(
