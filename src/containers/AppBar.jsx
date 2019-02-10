@@ -15,6 +15,7 @@ import { Route, withRouter } from 'react-router-dom';
 const styles = theme => ({
   root: {
     width: '100%',
+    paddingBottom: 20
   },
   grow: {
     flexGrow: 1,
