@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -9,6 +9,9 @@ import Paper from '@material-ui/core/Paper';
 import AppBar from './AppBar';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
+import { playerActionCreator, playActionCreator } from "../actionCreators";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 
 const styles = theme => ({
     main: {
@@ -42,41 +45,91 @@ const styles = theme => ({
     },
 });
 
-function Landing(props) {
-    const { classes } = props;
 
-    return (
+class Landing extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            token: ""
+          };
+    }
+    login() {
+        this.playerCheckInterval = setInterval(() => this.handleToken(), 1000);
+      }
+      handleToken() {
+        if (window.Spotify !== null) {
+          clearInterval(this.playerCheckInterval);
+          this.props.auth(this.state.token);
+        }
+      }
+      onChange = event => {
+        this.setState({
+          token: event.target.value
+        });
+      };
+      componentDidUpdate(){
+          if (this.props.playerinstance!=null){
+            this.props.history.push('/master')
+          }
+      }
+    
+render(){
+    const { classes } = this.props;
+  return (
         <div className={classes.main}>
             <CssBaseline />
             <Paper className={classes.paper}>
                 <Typography component="h1" variant="h5">
                     Sign in
         </Typography>
+        <div>
+                    Get your token from
+                    <a href="https://developer.spotify.com/documentation/web-playback-sdk/quick-start/#" target="_blank">
+                    here
+                    </a>
+                    </div>
                 <form className={classes.form}>
                     <FormControl margin="normal" required fullWidth>
                         <InputLabel htmlFor="apiKey">API Key</InputLabel>
-                        <Input id="apiKey" name="apiKey" autoFocus />
-                    </FormControl>
-                    <FormControl margin="normal" required fullWidth>
-                        <InputLabel htmlFor="password">Group ID</InputLabel>
-                        <Input name="password" id="password" autoComplete="current-password" />
+                        <Input id="apiKey" name="apiKey" autoFocus 
+                        value={this.state.token}
+                        onChange={this.onChange}/>
                     </FormControl>
                     <Button
                         fullWidth
                         variant="contained"
                         color="primary"
                         className={classes.submit}
+                        onClick={()=>{this.login()}}
                     >
                         Sign in
-          </Button>
+                    </Button>
                 </form>
             </Paper>
         </div>
-    );
+    );  
 }
+    
+}
+const mapStatetoProps = state => ({
+    playerinstance: state.player || null
+  });
+  
+  const mapDispatchToProps = dispatch => ({
+    auth: token => dispatch(playerActionCreator(token)),
+    play: (playerinstance)=> dispatch(playActionCreator(playerinstance))
+  });
 
 Landing.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Landing);
+export default withStyles(styles)(
+    withRouter(
+      connect(
+        mapStatetoProps,
+        mapDispatchToProps
+      )(Landing)
+    )
+  );
+  

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Playback from './Playback';
 import {
@@ -6,11 +6,13 @@ import {
     createMuiTheme
 } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
+import { BrowserRouter, Route, withRouter, Switch } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid';
 import SimpleList from './SimpleList';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import {appStyles} from './theme'
 
 const theme = createMuiTheme({
     typography: {
@@ -50,9 +52,13 @@ const styles = theme => ({
 });
 
 
-function Master(props) {
-    const { classes } = props;
-
+class Master extends Component {
+    constructor(props){
+        super(props)
+    }
+    
+render(){
+    const { classes } = this.props;
     return (
 
         <div className="Master">
@@ -83,10 +89,33 @@ function Master(props) {
                         </Button>
                     </Paper>
                 </Grid>
+                <Grid item xs={12} lg={8}>
+                    {this.props.slave_link==null?
+                    (null):(
+                    <div>
+                        Send this
+                        <a href={this.props.slave_link} target="_blank">
+                        link 
+                    </a>
+                    to your friends
+                 </div>
+                 )}
+                </Grid>
             </Grid>
         </div>
 
     );
 }
-
-export default withStyles(styles)(Master);
+    
+}
+const mapStatetoProps = state => ({
+    slave_link: state.link || null
+  });
+  export default withStyles(appStyles)(
+    withRouter(
+      connect(
+        mapStatetoProps,
+        null
+      )(Master)
+    )
+  );

@@ -101,7 +101,7 @@ class App extends Component {
           <Switch>
             <Route path="/" component={Landing} exact />
             <Route path="/master" component={Master} />
-            <Route path="/slave/" component={Slave} /> 
+            <Route path="/slave" component={Slave} /> 
             <Route component={Error} />
           </Switch>
         </div>
@@ -115,11 +115,11 @@ const mapStatetoProps = state => ({
   slave_link: state.link || null
 });
 
-export default withStyles(appStyles)(
+export default 
   withRouter(
     connect(
       mapStatetoProps,
       null
     )(App)
-  )
+  
 );
