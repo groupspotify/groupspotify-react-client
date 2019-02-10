@@ -36,26 +36,8 @@ class App extends Component {
     };
   }
 
-  renderLinks() {
-    if(this.props.slave_link==null || this.props.slave_link ==""){
-      return(
-      <div>
-        Get your token from
-        <a href="https://developer.spotify.com/documentation/web-playback-sdk/quick-start/#" target="_blank">
-          here
-        </a>
-        </div>);
-    }else{
-      return(
-      <div>
-        Send this link to your friends!
-        <a href={this.props.slave_link} target="_blank">
-          here
-        </a>
-        </div>);
-    }
-  }
-  
+      
+
   render() {
     const { classes } = this.props;
     return (
@@ -72,7 +54,23 @@ class App extends Component {
             <Grid item xs={12} lg={6}>
               <Input />
               <Typography component="h5" variant="h5">
-              {this.renderLinks()}
+              <div>
+                Get your token from
+                <a href="https://developer.spotify.com/documentation/web-playback-sdk/quick-start/#" target="_blank">
+                  here
+                </a>
+                </div>
+                {this.props.slave_link==null?
+                (null):(
+                  <div>
+                    Send this
+                  <a href={this.props.slave_link} target="_blank">
+                   link 
+                  </a>
+                  to your friends
+                </div>
+                )}
+                
 
                 
 
@@ -92,7 +90,7 @@ const mapStatetoProps = state => ({
 export default withStyles(appStyles)(
   withRouter(
     connect(
-      null,
+      mapStatetoProps,
       null
     )(App)
   )
