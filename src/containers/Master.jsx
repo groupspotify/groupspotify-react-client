@@ -117,7 +117,7 @@ const mapStatetoProps = state => ({
     slave_link: state.link || null,
     player: state.player ||null,
   });
-  export default withStyles(appStyles)(
+  export default withStyles(styles)(
     withRouter(
       connect(
         mapStatetoProps,
