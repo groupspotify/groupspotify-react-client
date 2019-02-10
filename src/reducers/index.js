@@ -5,22 +5,21 @@ import actions from "../actions";
 export const initialState = {
   player: null,
   error: null,
-  songInfo: {
-    trackName: null,
-    artistName: null,
-    albumName: null,
-    playing: false,
-    position: 0,
-    duration: 0
-  },
+  gid:null,
   queue: {},
   link:null
 };
 
-const songInfoReducer = (state = false, action) => {
-  //TODO. Update song states
-  return state;
-};
+const gidReducer = (state = null, action) =>{
+  switch(action.type){
+    case actions.UPDATE_GID:
+      return action.payload;
+    case actions.DELETE_GID:
+      return null;
+    default:
+      return null;
+  }
+}
 
 const errorReducer = (state = false, action) => {
   //TODO. Update error state
@@ -38,7 +37,7 @@ const linkReducer = (state = null, action)=>{
     console.log(action.payload)
       return action.payload;
     default:
-      return null;
+      return state;
   }
 }
 
@@ -60,7 +59,8 @@ export default history =>
   combineReducers({
     router: connectRouter(history),
     error: errorReducer,
-    songInfo: songInfoReducer,
+    // songInfo: songInfoReducer,
     player: playerReducer,
-    link:linkReducer
+    link:linkReducer,
+    gid: gidReducer
   });

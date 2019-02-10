@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import Playback from './Playback';
 import {
@@ -11,6 +11,8 @@ import Grid from '@material-ui/core/Grid';
 import SimpleList from './SimpleList';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import qs from 'qs';
+
 
 const theme = createMuiTheme({
     typography: {
@@ -50,10 +52,17 @@ const styles = theme => ({
 });
 
 
-function Slave(props) {
-    const { classes } = props;
-
-    return (
+class Slave extends Component {
+    constructor(props){
+        super(props);
+    }
+    UNSAFE_componentWillMount(){
+        let GID = qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).GID
+        console.log(GID);
+    }
+    render(){
+      const { classes } = this.props;  
+      return (
 
         <div className="Master">
             <Grid container spacing={24} direction={'row'}>
@@ -87,6 +96,10 @@ function Slave(props) {
         </div>
 
     );
+    }
+    
+
+    
 }
 
 export default withStyles(styles)(Slave);

@@ -12,6 +12,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import { playerActionCreator, playActionCreator } from "../actionCreators";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import qs from 'qs';
 
 const styles = theme => ({
     main: {
@@ -72,6 +73,7 @@ class Landing extends Component {
             this.props.history.push('/master')
           }
       }
+      
     
 render(){
     const { classes } = this.props;

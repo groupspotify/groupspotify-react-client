@@ -56,6 +56,11 @@ class Master extends Component {
     constructor(props){
         super(props)
     }
+    UNSAFE_componentWillMount(){
+        if(!this.props.player){
+            this.props.history.push('/')
+        }
+    }
     
 render(){
     const { classes } = this.props;
@@ -109,7 +114,8 @@ render(){
     
 }
 const mapStatetoProps = state => ({
-    slave_link: state.link || null
+    slave_link: state.link || null,
+    player: state.player ||null,
   });
   export default withStyles(appStyles)(
     withRouter(

@@ -8,11 +8,11 @@ import { routerMiddleware, ConnectedRouter } from 'connected-react-router';
 import thunk from 'redux-thunk';
 import createHistory from 'history/createBrowserHistory';
 import rootReducer, { initialState } from './reducers';
-
+import { routeActionEnhancer } from './actionEnhancers';
 const history = createHistory();
 
 const enhancers = [];
-const middleware = [routerMiddleware(history), thunk];
+const middleware = [routerMiddleware(history),routeActionEnhancer, thunk];
 
 // eslint-disable-next-line
 if (process.env.NODE_ENV === 'development') {

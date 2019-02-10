@@ -57,51 +57,13 @@ class App extends Component {
   render() {
     const { classes } = this.props;
     return (
-      // <MuiThemeProvider theme={theme}>
-      //   <div className="App">
-      //     <AppBar />
-      //     <Grid container spacing={24}>
-      //       <Grid item xs={12} lg={12}>
-              
-      //       </Grid>
-      //       <Grid item xs={12} lg={6}>
-      //         <Playback />
-      //       </Grid>
-      //       <Grid item xs={12} lg={6}>
-      //         <Input />
-      //         <Typography component="h5" variant="h5">
-      //         <div>
-      //           Get your token from
-      //           <a href="https://developer.spotify.com/documentation/web-playback-sdk/quick-start/#" target="_blank">
-      //             here
-      //           </a>
-      //           </div>
-      //           {this.props.slave_link==null?
-      //           (null):(
-      //             <div>
-      //               Send this
-      //             <a href={this.props.slave_link} target="_blank">
-      //              link 
-      //             </a>
-      //             to your friends
-      //           </div>
-      //           )}
-                
-
-                
-
-      //         </Typography>
-      //       </Grid>
-      //     </Grid>
-      //   </div>
-      // </MuiThemeProvider>
       <BrowserRouter>
         <div>
           <AppBar />
           <Switch>
             <Route path="/" component={Landing} exact />
-            <Route path="/master" component={Master} />
-            <Route path="/slave" component={Slave} /> 
+            <Route exact path="/master" component={Master} />
+            <Route exact path="/slave" component={Slave} /> 
             <Route component={Error} />
           </Switch>
         </div>
