@@ -1,9 +1,9 @@
 import actions from "../actions";
 import solace from "solclientjs";
-import TopicSubscriber from './subscriber'
-//solace = require('solclientjs').debug;
+import TopicSubscriber from '../services/solace/subscriber'
+
 const factoryProps = new solace.SolclientFactoryProperties();
-factoryProps.profile = solace.SolclientFactoryProfiles.version10;
+factoryProps.profile = solace.SolclientFactoryProfiles7;
 solace.SolclientFactory.init(factoryProps);
 
 const play = ({

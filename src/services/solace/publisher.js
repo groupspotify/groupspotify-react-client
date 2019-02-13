@@ -2,7 +2,7 @@
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * regarding copyright ownership.  The ASF licenses this file~~~
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -56,13 +56,13 @@ var TopicPublisher = function (solaceModule, topicName) {
         }
         
         
-        var hosturl ="ws://mr4b11zr9cb.messaging.mymaas.net:80";
+        var hosturl ="ws://mr8cpgdhuweqx.messaging.solace.cloud:21059";
         publisher.log('Connecting to Solace message router using url: ' + hosturl);
         var username = "solace-cloud-client";
         subscriber.log('Client username: ' + username);
-        var vpn = "msgvpn-4b11zr9bh";
+        var vpn = "msgvpn-red4rnpd";
         publisher.log('Solace message router VPN name: ' + vpn);
-        var pass = "rr87cgf6d4qi9d5fqiun1sf1uv";
+        var pass = "p7oac0a8jbabeubv8h1jmb3u4c";
         // create session
         try {
             publisher.session = solace.SolclientFactory.createSession({

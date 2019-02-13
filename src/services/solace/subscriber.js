@@ -1,5 +1,5 @@
-import actions from "../actions";
-import {store} from '../'
+import actions from "../../actions";
+import {store} from '../../'
 export default  function (solaceModule, topicName) {
     'use strict';
     var solace = solaceModule;
@@ -30,13 +30,13 @@ export default  function (solaceModule, topicName) {
             subscriber.log('Already connected and ready to subscribe.');
             return;
         }
-        var hosturl ="ws://mr4b11zr9cb.messaging.mymaas.net:80";
+        var hosturl ="wss://mr8cpgdhuweqx.messaging.solace.cloud:21060";
         subscriber.log('Connecting to Solace message router using url: ' + hosturl);
         var username = "solace-cloud-client";
         subscriber.log('Client username: ' + username);
-        var vpn = "msgvpn-4b11zr9bh";
+        var vpn = "msgvpn-red4rnpd";
         subscriber.log('Solace message router VPN name: ' + vpn);
-        var pass = "rr87cgf6d4qi9d5fqiun1sf1uv";
+        var pass = "p7oac0a8jbabeubv8h1jmb3u4c";
         // create session
         try {
             subscriber.session = solace.SolclientFactory.createSession({
