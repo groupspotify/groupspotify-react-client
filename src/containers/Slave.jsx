@@ -13,7 +13,7 @@ import SimpleList from './SimpleList';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import qs from 'qs';
-import { gidActionCreator, initilizeSlave } from "../actionCreators";
+import { gidActionCreator, initilizeSlave, publishActionCreator } from "../actionCreators";
 
 
 const theme = createMuiTheme({
@@ -67,6 +67,7 @@ class Slave extends Component {
         this.props.init(gid);
         console.log(gid);
     }
+    
     render(){
       const { classes } = this.props;  
       return (
@@ -96,7 +97,9 @@ class Slave extends Component {
                             margin="normal"
                         />
                         
-                        <Button variant="contained" color="primary" className={classes.button}>
+                        <Button variant="contained" color="primary" className={classes.button} 
+                        onClick={()=>{this.props.publish(this.state.input)}}
+                        >
                         Request
                         </Button>
                     </Paper>
@@ -119,7 +122,8 @@ const mapStatetoProps = state => ({
   
   const mapDispatchToProps = dispatch => ({
     init: (gid) => dispatch(initilizeSlave(gid)),
-    updateGid: (gid)=> dispatch(gidActionCreator(gid))
+    updateGid: (gid)=> dispatch(gidActionCreator(gid)),
+    publish: (request) => dispatch(publishActionCreator(request))
   });
   export default withStyles(styles)(
     withRouter(

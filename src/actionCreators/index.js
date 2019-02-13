@@ -1,10 +1,5 @@
 import actions from "../actions";
-import solace from "solclientjs";
-import TopicSubscriber from '../services/solace/subscriber'
-
-const factoryProps = new solace.SolclientFactoryProperties();
-factoryProps.profile = solace.SolclientFactoryProfiles7;
-solace.SolclientFactory.init(factoryProps);
+import {initSubscriber,initPublisher} from '../services/solace'
 
 const play = ({
   spotify_uri,
@@ -24,6 +19,9 @@ const play = ({
   });
 };
 var subscriber;
+var publisher;
+
+
 export const playerActionCreator = token => async dispatch => {
   dispatch({
     type: actions.AUTH_STARTED
@@ -73,8 +71,7 @@ export const playerActionCreator = token => async dispatch => {
 
 
     // create the subscriber, specifying the name of the subscription topic
-    subscriber = new TopicSubscriber(solace, topicName);
-
+    subscriber = initSubscriber(topicName)
     // subscribe to messages on Solace message router
     subscriber.run();
       
@@ -147,10 +144,28 @@ export const gidActionCreator = gid => async dispatch =>{
     payload:gid
   });
 }
-export const initilizeSlave = gid => dispatch =>{
-  // create the subscriber, specifying the name of the subscription topic
-  var subscriber = new TopicSubscriber(solace, gid);
-  // subscribe to messages on Solace message router
-  subscriber.run();
+export const initilizeSlave = topicName => async dispatch =>{
+  dispatch({
+    type: actions.INIT_SLAVE_STARTED
+  });
+  subscriber = await initSubscriber(topicName)
+  publisher = await initPublisher(topicName)
+  try{
+    subscriber.run();
+    publisher.run();
+    dispatch({
+      type: actions.INIT_SLAVE_SUCCEEDED
+    });
+  }catch (error){
+    dispatch({
+      type: actions.INIT_SLAVE_FAILED,
+      payload:error
+    });
+  }
+}
 
+export const publishActionCreator = request => async dispatch =>{
+  if (request){
+    publisher.publish(request)
+  }
 }
