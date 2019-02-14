@@ -24,11 +24,11 @@
  */
 
 /*jslint es6 node:true devel:true*/
-import actions from "../../actions";
-import {store} from '../../'
+// import actions from "../../actions";
+// import {store} from '../../'
 
 export default  function (solaceModule, topicName) {
-    'use strict';
+    
     var solace = solaceModule;
     var publisher = {};
     publisher.session = null;

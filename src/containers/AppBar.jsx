@@ -7,10 +7,10 @@ import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
+
 import SearchIcon from '@material-ui/icons/Search';
 import { connect } from 'react-redux';
-import { Route, withRouter } from 'react-router-dom';
+import {withRouter } from 'react-router-dom';
 
 const styles = theme => ({
   root: {

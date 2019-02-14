@@ -43,9 +43,7 @@ const styles = theme => ({
 
 
 class Playback extends Component {
-constructor(props){
-  super(props)
-}
+
 
   render() {
     const {classes, theme} = this.props

@@ -1,5 +1,5 @@
-import actions from "../../actions";
-import {store} from '../../'
+// import actions from "../../actions";
+// import {store} from '../../'
 
 export default async function (access_token, refresh_token){
     let player;

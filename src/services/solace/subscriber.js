@@ -1,7 +1,7 @@
 import actions from "../../actions";
 import {store} from '../../'
 export default  function (solaceModule, topicName) {
-    'use strict';
+    
     var solace = solaceModule;
     var subscriber = {};
     subscriber.session = null;

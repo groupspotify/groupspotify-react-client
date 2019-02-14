@@ -1,11 +1,8 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import Playback from './Playback';
-import { BrowserRouter, Route, withRouter, Switch } from 'react-router-dom';
-import {
-    MuiThemeProvider,
-    createMuiTheme
-} from '@material-ui/core/styles';
+import {withRouter} from 'react-router-dom';
+
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid';
@@ -16,12 +13,7 @@ import qs from 'qs';
 import { gidActionCreator, initilizeSlave, publishActionCreator } from "../actionCreators";
 
 
-const theme = createMuiTheme({
-    typography: {
-        useNextVariants: true
-    },
-    shadows: ['none'],
-});
+
 const styles = theme => ({
     root: {
         flexGrow: 1,

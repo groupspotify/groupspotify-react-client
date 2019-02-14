@@ -3,25 +3,13 @@ import { connect } from 'react-redux';
 import Playback from './Playback';
 import Typography from '@material-ui/core/Typography';
 
-import {
-    MuiThemeProvider,
-    createMuiTheme
-} from '@material-ui/core/styles';
+
 import { withStyles } from '@material-ui/core/styles';
-import { BrowserRouter, Route, withRouter, Switch } from 'react-router-dom';
+import { withRouter} from 'react-router-dom';
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid';
 import SimpleList from './SimpleList';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import {appStyles} from './theme'
 
-const theme = createMuiTheme({
-    typography: {
-        useNextVariants: true
-    },
-    shadows: ['none'],
-});
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -55,9 +43,7 @@ const styles = theme => ({
 
 
 class Master extends Component {
-    constructor(props){
-        super(props)
-    }
+    
     UNSAFE_componentWillMount(){
         if(!this.props.player){
             this.props.history.push('/')
@@ -85,7 +71,7 @@ render(){
                 <Typography component="h1" variant="h5">
                 {this.props.slave_link==null?
                     (null):(
-                        <p>Send this <a href={this.props.slave_link} target="_blank">link</a> to your friends</p>
+                        <p>Send this <a href={this.props.slave_link} target="_blank" rel="noopener noreferrer">link</a> to your friends</p>
                  )}
                 </Typography>
                    

@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
+
 import Paper from '@material-ui/core/Paper';
-import AppBar from './AppBar';
+
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { playerActionCreator,  authActionCreator } from "../actionCreators";
@@ -97,7 +95,7 @@ render(){
                 </Typography>
         <div>
                     Get your token from
-                    <a href="https://developer.spotify.com/documentation/web-playback-sdk/quick-start/#" target="_blank">
+                    <a href="https://developer.spotify.com/documentation/web-playback-sdk/quick-start/#" target="_blank" rel ="noopener noreferrer">
                     here
                     </a>
                     </div>
