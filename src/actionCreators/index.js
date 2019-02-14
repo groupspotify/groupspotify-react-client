@@ -21,10 +21,35 @@ const play = ({
 var subscriber;
 var publisher;
 
+export const authActionCreator = message => async dispatch =>{
+  switch(message){
+    case 'FAILED':
+      dispatch({
+        type: actions.AUTH_FAILED
+      });
+      return;
+    case 'STARTED':
+      dispatch({
+        type: actions.AUTH_STARTED
+      });
+      return;
+    default:
+      dispatch({
+        type: actions.AUTH_SUCCEEDED,
+        payload:message
+      });
+      return;
+  }
+}
+
+
+
+
+
 
 export const playerActionCreator = token => async dispatch => {
   dispatch({
-    type: actions.AUTH_STARTED
+    type: actions.PLAYER_STARTED
   });
   try {
     let player = await new window.Spotify.Player({
@@ -38,14 +63,17 @@ export const playerActionCreator = token => async dispatch => {
       console.error(e);
     });
     player.on("authentication_error", e => {
-      throw "Authorization error";
+      console.log(e);
     });
     player.on("account_error", e => {
-      throw "Authorization error";
       console.error(e);
     });
     player.on("playback_error", e => {
       console.error(e);
+    });
+     // Not Ready
+    player.addListener('not_ready', ({ device_id }) => {
+      console.log('Device ID has gone offline', device_id);
     });
 
     // Playback status updates
@@ -79,18 +107,18 @@ export const playerActionCreator = token => async dispatch => {
 
     if (await player.connect()) {
       dispatch({
-        type: actions.AUTH_SUCCEEDED,
+        type: actions.PLAYER_SUCCEEDED,
         payload: player
       });
     } else {
       dispatch({
-        type: actions.AUTH_FAILED
+        type: actions.PLAYER_FAILED
       });
     }
   } catch (error) {
     console.log(error);
     dispatch({
-      type: actions.AUTH_FAILED
+      type: actions.PLAYER_FAILED
     });
   }
 };

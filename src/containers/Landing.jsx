@@ -9,7 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import AppBar from './AppBar';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
-import { playerActionCreator, playActionCreator } from "../actionCreators";
+import { playerActionCreator,  authActionCreator } from "../actionCreators";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import qs from 'qs';
@@ -51,8 +51,24 @@ class Landing extends Component {
     constructor(props){
         super(props);
         this.state = {
-            token: ""
+            access_token: "",
+            refresh_token: ""
           };
+    }
+    componentDidMount(){
+        let access_token = qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).access_token;
+        let refresh_token = qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).refresh_token;
+        this.props.auth('STARTED');
+        if(access_token){
+            this.setState({
+                access_token
+            });
+            this.props.auth({access_token, refresh_token});
+            this.login();
+            // DO something
+        }else{
+            this.props.auth('FAILED');
+        }
     }
     login() {
         this.playerCheckInterval = setInterval(() => this.handleToken(), 1000);
@@ -60,14 +76,9 @@ class Landing extends Component {
       handleToken() {
         if (window.Spotify !== null) {
           clearInterval(this.playerCheckInterval);
-          this.props.auth(this.state.token);
+          this.props.player(this.state.access_token);
         }
       }
-      onChange = event => {
-        this.setState({
-          token: event.target.value
-        });
-      };
       componentDidUpdate(){
           if (this.props.playerinstance!=null){
             this.props.history.push('/master')
@@ -83,7 +94,7 @@ render(){
             <Paper className={classes.paper}>
                 <Typography component="h1" variant="h5">
                     Sign in
-        </Typography>
+                </Typography>
         <div>
                     Get your token from
                     <a href="https://developer.spotify.com/documentation/web-playback-sdk/quick-start/#" target="_blank">
@@ -91,18 +102,13 @@ render(){
                     </a>
                     </div>
                 <form className={classes.form}>
-                    <FormControl margin="normal" required fullWidth>
-                        <InputLabel htmlFor="apiKey">API Key</InputLabel>
-                        <Input id="apiKey" name="apiKey" autoFocus 
-                        value={this.state.token}
-                        onChange={this.onChange}/>
-                    </FormControl>
+                    
                     <Button
                         fullWidth
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={()=>{this.login()}}
+                        onClick={()=>{window.location='http://localhost:8888/login'}}
                     >
                         Sign in
                     </Button>
@@ -118,8 +124,9 @@ const mapStatetoProps = state => ({
   });
   
   const mapDispatchToProps = dispatch => ({
-    auth: token => dispatch(playerActionCreator(token)),
-    play: (playerinstance)=> dispatch(playActionCreator(playerinstance))
+    player: token => dispatch(playerActionCreator(token)),
+    play: (playerinstance)=> dispatch(playerActionCreator(playerinstance)),
+    auth: (message) => dispatch(authActionCreator(message))
   });
 
 Landing.propTypes = {

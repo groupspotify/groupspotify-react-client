@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Playback from './Playback';
+import Typography from '@material-ui/core/Typography';
+
 import {
     MuiThemeProvider,
     createMuiTheme
@@ -79,32 +81,14 @@ render(){
                     </Paper>
                 </Grid>
 
-                <Grid item xs={12} lg={4}>
-                    <Paper className={classes.request}>
-                        <TextField
-                            id="standard-with-placeholder"
-                            label="Request a song"
-                            placeholder="Despacito"
-                            className={classes.textField}
-                            margin="normal"
-                        />
-                        
-                        <Button variant="contained" color="primary" className={classes.button}>
-                        Request
-                        </Button>
-                    </Paper>
-                </Grid>
                 <Grid item xs={12} lg={8}>
-                    {this.props.slave_link==null?
+                <Typography component="h1" variant="h5">
+                {this.props.slave_link==null?
                     (null):(
-                    <div>
-                        Send this
-                        <a href={this.props.slave_link} target="_blank">
-                        link 
-                    </a>
-                    to your friends
-                 </div>
+                        <p>Send this <a href={this.props.slave_link} target="_blank">link</a> to your friends</p>
                  )}
+                </Typography>
+                   
                 </Grid>
             </Grid>
         </div>
