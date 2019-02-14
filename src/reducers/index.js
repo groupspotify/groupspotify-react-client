@@ -94,5 +94,5 @@ export default history =>
     link:linkReducer,
     gid: gidReducer,
     queue: queueReducer,
-    token: tokenReducer
+    tokens: tokenReducer
   });

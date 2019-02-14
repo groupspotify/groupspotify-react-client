@@ -76,7 +76,7 @@ class Landing extends Component {
       handleToken() {
         if (window.Spotify !== null) {
           clearInterval(this.playerCheckInterval);
-          this.props.player(this.state.access_token);
+          this.props.player(this.state);
         }
       }
       componentDidUpdate(){
@@ -124,8 +124,8 @@ const mapStatetoProps = state => ({
   });
   
   const mapDispatchToProps = dispatch => ({
-    player: token => dispatch(playerActionCreator(token)),
-    play: (playerinstance)=> dispatch(playerActionCreator(playerinstance)),
+    player: tokens => dispatch(playerActionCreator(tokens)),
+    // play: (playerinstance)=> dispatch(playerActionCreator(playerinstance)),
     auth: (message) => dispatch(authActionCreator(message))
   });
 

@@ -1,6 +1,6 @@
 import actions from "../actions";
 import {initSubscriber,initPublisher} from '../services/solace'
-
+import initPlayer from '../services/spotify'
 const play = ({
   spotify_uri,
   playerInstance: {
@@ -20,6 +20,7 @@ const play = ({
 };
 var subscriber;
 var publisher;
+var player;
 
 export const authActionCreator = message => async dispatch =>{
   switch(message){
@@ -42,74 +43,35 @@ export const authActionCreator = message => async dispatch =>{
   }
 }
 
-
-
-
-
-
-export const playerActionCreator = token => async dispatch => {
+export const playerActionCreator = tokens => async dispatch => {
   dispatch({
     type: actions.PLAYER_STARTED
   });
   try {
-    let player = await new window.Spotify.Player({
-      name: "Group Spotify!",
-      getOAuthToken: cb => {
-        cb(token);
-      },
-      volume: 0.2
-    });
-    player.on("initialization_error", e => {
-      console.error(e);
-    });
-    player.on("authentication_error", e => {
-      console.log(e);
-    });
-    player.on("account_error", e => {
-      console.error(e);
-    });
-    player.on("playback_error", e => {
-      console.error(e);
-    });
-     // Not Ready
-    player.addListener('not_ready', ({ device_id }) => {
-      console.log('Device ID has gone offline', device_id);
-    });
-
-    // Playback status updates
-    player.on("player_state_changed", state => {
-      console.log(state);
-    });
-
-    // Ready
-    var d = new Date();
-    var topicName = d.getTime().toString();
-    player.on("ready", data => {
-      console.log("Let the music play on!");
-      // group id
-      let link = "http://localhost:3000/slave?gid=" + topicName;
-      dispatch({
-        type: actions.SLAVE_LINK,
-        payload: link
-      });
-      dispatch({
-        type: actions.UPDATE_GID,
-        payload: topicName
-      });
-
-
-    // create the subscriber, specifying the name of the subscription topic
-    subscriber = initSubscriber(topicName)
-    // subscribe to messages on Solace message router
-    subscriber.run();
-      
-    });
+    player = await initPlayer(tokens.access_token, tokens.refresh_token);
+    await player.connect();
+    console.log(player)
 
     if (await player.connect()) {
       dispatch({
         type: actions.PLAYER_SUCCEEDED,
         payload: player
       });
+      var d = new Date();
+      var topicName = d.getTime().toString();
+      
+      let link = "http://localhost:3000/slave?gid=" + topicName;
+        dispatch({
+          type: actions.SLAVE_LINK,
+          payload: link
+        });
+        dispatch({
+          type: actions.UPDATE_GID,
+          payload: topicName
+        });
+
+      subscriber = initSubscriber(topicName)
+      subscriber.run();
     } else {
       dispatch({
         type: actions.PLAYER_FAILED
