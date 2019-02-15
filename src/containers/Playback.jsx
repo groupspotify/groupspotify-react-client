@@ -13,6 +13,7 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 import { togglePlayPauseActionCreator, prevActionCreator, nextActionCreator } from "../actionCreators";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import Progress from './Progress';
 
 const styles = theme => ({
   card: {
@@ -52,7 +53,7 @@ class Playback extends Component {
   render() {
     const {classes, theme} = this.props;
     const {info} = this.props;
-    console.log(info.track_window.current_track.album.images[0].url);
+    // console.log(info.track_window.current_track.album.images[0].url);
     return (
       <Card className={classes.card}>
       <div className={classes.details}>
@@ -75,6 +76,8 @@ class Playback extends Component {
             {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
           </IconButton>
         </div>
+        
+        <Progress/>
       </div>
       <CardMedia
         className={classes.cover}

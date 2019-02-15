@@ -91,6 +91,37 @@ export const playerActionCreator = tokens => async dispatch => {
 };
 
 export const queueActionCreator = queue => dispatch => {};
+
+export const updateProgressActionCreator = (reset=null)=> dispatch=>{
+  dispatch({
+    type: actions.UPDATING_PROGRESS
+  });
+  player.getCurrentState().then(state => {
+    if (!state) {
+      console.error('User is not playing music through the Web Playback SDK');
+      return;
+    }
+    console.log(state.position)
+    if(reset){
+      dispatch({
+        type:actions.UPDATED_PROGRESS,
+        payload:{
+          position:reset,
+          duration:state.duration
+        }
+      })
+    }else{
+      dispatch({
+        type:actions.UPDATED_PROGRESS,
+        payload:{
+          position:state.position,
+          duration:state.duration
+        }
+      })
+    }
+    
+  });
+}
 export const playActionCreator = playerInstance => async dispatch => {
   await playerInstance.connect();
   await play({

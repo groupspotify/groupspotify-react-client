@@ -12,9 +12,17 @@ export const initialState = {
   topicName:null,
   queue: {},
   link:null,
-  info:null
+  info:null,
+  progress:null
 };
-
+const progressReducer = (state=null, action)=>{
+  switch(action.type){
+    case actions.UPDATED_PROGRESS:
+    return action.payload;
+    default:
+    return state
+  }
+}
 const infoReducer = (state = null, action)=>{
   switch(action.type){
     case actions.UPDATE_TRACK:
@@ -104,5 +112,6 @@ export default history =>
     topicName: topicNameReducer,
     queue: queueReducer,
     tokens: tokenReducer,
-    info: infoReducer
+    info: infoReducer,
+    progress: progressReducer
   });

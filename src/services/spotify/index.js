@@ -1,10 +1,10 @@
 import actions from "../../actions";
 import {store} from '../../'
+import {updateProgressActionCreator} from '../../actionCreators'
 // AUTH_LOGOUT
 
 export default async function (refresh_token){
     let player;
-    console.log(refresh_token)
     player = new window.Spotify.Player({
         name: "Group Spotify!",
         getOAuthToken: async cb => {
@@ -15,7 +15,6 @@ export default async function (refresh_token){
                 })
                 .then(function(myJson) {
                     access_token = myJson.access_token;
-                    console.log(access_token)
                 });
           cb(access_token);
         },
