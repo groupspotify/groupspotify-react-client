@@ -48,9 +48,14 @@ export const playerActionCreator = tokens => async dispatch => {
     type: actions.PLAYER_STARTED
   });
   try {
-    player = await initPlayer(tokens.access_token, tokens.refresh_token);
-    await player.connect();
-    console.log(player)
+    
+    player = await initPlayer(tokens.refresh_token);
+    if(!player.connect()){
+      dispatch({
+        type: actions.PLAYER_FAILED
+      });
+      return;
+    }
 
     if (await player.connect()) {
       dispatch({
@@ -60,13 +65,13 @@ export const playerActionCreator = tokens => async dispatch => {
       var d = new Date();
       var topicName = d.getTime().toString();
       
-      let link = "http://localhost:3000/slave?gid=" + topicName;
+      let link = "http://localhost:3000/slave?topicName=" + topicName;
         dispatch({
           type: actions.SLAVE_LINK,
           payload: link
         });
         dispatch({
-          type: actions.UPDATE_GID,
+          type: actions.UPDATE_TOPICNAME,
           payload: topicName
         });
 
@@ -104,9 +109,7 @@ export const togglePlayPauseActionCreator = playerInstance => async dispatch => 
     // TODO: prompt an error message
     return;
   }
-  playerInstance.togglePlay().then(() => {
-    console.log("Toggled playback!");
-  });
+  playerInstance.togglePlay()
 };
 
 export const nextActionCreator = playerInstance => async dispatch => {
@@ -114,24 +117,20 @@ export const nextActionCreator = playerInstance => async dispatch => {
     //TODO: prompt an error message
     return;
   }
-  playerInstance.nextTrack().then(() => {
-    console.log("Skipped to next track!");
-  });
+  playerInstance.nextTrack()
 };
 export const prevActionCreator = playerInstance => async dispatch => {
   if (playerInstance == null) {
     //TODO: prompt an error message
     return;
   }
-  playerInstance.previousTrack().then(() => {
-    console.log("Set to previous track!");
-  });
+  playerInstance.previousTrack()
 };
 
-export const gidActionCreator = gid => async dispatch =>{
+export const topicNameActionCreator = topicName => async dispatch =>{
   dispatch({
-    type: actions.UPDATE_GID,
-    payload:gid
+    type: actions.UPDATE_TOPICNAME,
+    payload:topicName
   });
 }
 export const initilizeSlave = topicName => async dispatch =>{

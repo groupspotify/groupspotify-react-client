@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import PauseIcon from '@material-ui/icons/Pause';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import { togglePlayPauseActionCreator, prevActionCreator, nextActionCreator } from "../actionCreators";
 import { connect } from "react-redux";
@@ -16,6 +17,10 @@ import { withRouter } from "react-router-dom";
 const styles = theme => ({
   card: {
     display: 'flex',
+    position: 'absolute',
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)'
   },
   details: {
     display: 'flex',
@@ -36,8 +41,7 @@ const styles = theme => ({
   playIcon: {
     height: 38,
     width: 38,
-  },
-  
+  },  
 });
 
 
@@ -46,16 +50,18 @@ class Playback extends Component {
 
 
   render() {
-    const {classes, theme} = this.props
+    const {classes, theme} = this.props;
+    const {info} = this.props;
+    console.log(info.track_window.current_track.album.images[0].url);
     return (
       <Card className={classes.card}>
       <div className={classes.details}>
         <CardContent className={classes.content}>
           <Typography component="h5" variant="h5">
-            Live From Space
+            {(info)?info.track_window.current_track.name:"Song"}
           </Typography> 
           <Typography variant="subtitle1" color="textSecondary">
-            Mac Miller
+            {(info)?info.track_window.current_track.artists.map(item=>item.name): "Artists"}
           </Typography>
         </CardContent>
         <div className={classes.controls}>
@@ -63,7 +69,7 @@ class Playback extends Component {
             {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
           </IconButton>
           <IconButton aria-label="Play/pause" onClick={()=>{this.props.toggle(this.props.playerinstance)}}>
-            <PlayArrowIcon className={classes.playIcon} />
+            {(info)?((!info.paused)?(<PauseIcon className={classes.playIcon} />):(<PlayArrowIcon className={classes.playIcon} />)):<PlayArrowIcon className={classes.playIcon} />}
           </IconButton>
           <IconButton aria-label="Next" onClick={()=>{this.props.next(this.props.playerinstance)}}>
             {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
@@ -72,8 +78,8 @@ class Playback extends Component {
       </div>
       <CardMedia
         className={classes.cover}
-        image="/static/images/cards/live-from-space.jpg"
-        title="Live from space album cover"
+        image={(info)?`${info.track_window.current_track.album.images[0].url}`:""}
+        title={(info)?`Album cover for ${info.track_window.current_track.name}`:""}
       />
     </Card>
     )
@@ -82,7 +88,8 @@ class Playback extends Component {
 
 
 const mapStatetoProps = state => ({
-  playerinstance: state.player || null
+  playerinstance: state.player || null,
+  info: state.info || null
 });
 const mapDispatchToProps = dispatch => ({
   toggle: (playerinstance)=> dispatch(togglePlayPauseActionCreator(playerinstance)),

@@ -37,7 +37,13 @@ const styles = theme => ({
 
     list: {
         width: 500
-    }
+    },
+    not_connected: {
+        position: 'absolute',
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)'
+      }
 
 });
 
@@ -52,10 +58,12 @@ class Master extends Component {
     
 render(){
     const { classes } = this.props;
+    const {info} = this.props;
     return (
 
         <div className="Master">
-            <Grid container spacing={24} direction={'row'}>
+            {(info)?(
+                <Grid container spacing={24} direction={'row'}>
 
                 <Grid item xs={12} lg={6}>
                     <Playback />
@@ -77,6 +85,13 @@ render(){
                    
                 </Grid>
             </Grid>
+            ):(
+                
+                        <Typography component="h1" variant="h5" className={classes.not_connected}>
+                            Connect to Group Spotify from your Spotify App
+                        </Typography>
+                
+            )}
         </div>
 
     );
@@ -86,6 +101,7 @@ render(){
 const mapStatetoProps = state => ({
     slave_link: state.link || null,
     player: state.player ||null,
+    info: state.info || null
   });
   export default withStyles(styles)(
     withRouter(

@@ -1,20 +1,21 @@
-// import actions from "../../actions";
-// import {store} from '../../'
+import actions from "../../actions";
+import {store} from '../../'
+// AUTH_LOGOUT
 
-export default async function (access_token, refresh_token){
+export default async function (refresh_token){
     let player;
+    console.log(refresh_token)
     player = new window.Spotify.Player({
         name: "Group Spotify!",
         getOAuthToken: async cb => {
             let access_token;   
             await fetch(`http://localhost:8888/refresh_token?refresh_token=${refresh_token}`,{method: 'GET'})
-                .then(async function(response) {
-                    console.log("iwj")
-                    return  await response.json();
+            .then(async function(response) {
+                    return response.json()
                 })
                 .then(function(myJson) {
-                    console.log("hi")
-                    access_token = (JSON.stringify(myJson).access_token);
+                    access_token = myJson.access_token;
+                    console.log(access_token)
                 });
           cb(access_token);
         },
@@ -24,9 +25,11 @@ export default async function (access_token, refresh_token){
         console.error(e);
       });
       player.on("authentication_error", e => {
+        authFail();
         console.log(e);
       });
       player.on("account_error", e => {
+        authFail();
         console.error(e);
       });
       player.on("playback_error", e => {
@@ -40,6 +43,8 @@ export default async function (access_token, refresh_token){
       // Playback status updates
       player.on("player_state_changed", state => {
         console.log(state);
+        updateTrackActionCreator(state);
+
       });
   
       // Ready
@@ -48,4 +53,16 @@ export default async function (access_token, refresh_token){
         // group id
       });
       return player;
+}
+
+const authFail = () =>{
+  store.dispatch({
+      type: actions.AUTH_LOGOUT
+    })
+}
+const updateTrackActionCreator= update =>{
+  store.dispatch({
+      type: actions.UPDATE_TRACK,
+      payload:update
+    })
 }

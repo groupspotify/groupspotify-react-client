@@ -53,17 +53,17 @@ class Landing extends Component {
             refresh_token: ""
           };
     }
-    componentDidMount(){
+    UNSAFE_componentWillMount(){
         let access_token = qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).access_token;
         let refresh_token = qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).refresh_token;
         this.props.auth('STARTED');
-        if(access_token){
+        if(access_token && refresh_token){
             this.setState({
-                access_token
+                access_token,
+                refresh_token
             });
             this.props.auth({access_token, refresh_token});
             this.login();
-            // DO something
         }else{
             this.props.auth('FAILED');
         }

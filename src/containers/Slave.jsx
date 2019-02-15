@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import Playback from './Playback';
+
 import {withRouter} from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -10,7 +10,7 @@ import SimpleList from './SimpleList';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import qs from 'qs';
-import { gidActionCreator, initilizeSlave, publishActionCreator } from "../actionCreators";
+import { topicNameActionCreator, initilizeSlave, publishActionCreator } from "../actionCreators";
 
 
 
@@ -39,9 +39,7 @@ const styles = theme => ({
         marginTop: 25
     },
 
-    list: {
-        width: 500
-    }
+    
 
 });
 
@@ -54,10 +52,9 @@ class Slave extends Component {
         }
     }
     UNSAFE_componentWillMount(){
-        let gid = qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).gid
-        this.props.updateGid(gid);
-        this.props.init(gid);
-        console.log(gid);
+        let topicName = qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).topicName
+        this.props.updateTopicName(topicName);
+        this.props.init(topicName);
     }
     
     render(){
@@ -66,18 +63,7 @@ class Slave extends Component {
 
         <div className="Master">
             <Grid container spacing={24} direction={'row'}>
-
-                <Grid item xs={12} lg={6}>
-                    <Playback />
-                </Grid>
-
-                <Grid item xs={12} lg={6}>
-                    <Paper className={classes.list}>
-                        <SimpleList />
-                    </Paper>
-                </Grid>
-
-                <Grid item xs={12} lg={4}>
+                <Grid item xs={12} lg={12}>
                     <Paper className={classes.request}>
                         <TextField
                             id="standard-with-placeholder"
@@ -96,6 +82,11 @@ class Slave extends Component {
                         </Button>
                     </Paper>
                 </Grid>
+                <Grid item xs={12} lg={12}>
+                    
+                        <SimpleList />
+                    
+                </Grid>
             </Grid>
         </div>
 
@@ -113,8 +104,8 @@ const mapStatetoProps = state => ({
   });
   
   const mapDispatchToProps = dispatch => ({
-    init: (gid) => dispatch(initilizeSlave(gid)),
-    updateGid: (gid)=> dispatch(gidActionCreator(gid)),
+    init: (topicName) => dispatch(initilizeSlave(topicName)),
+    updateTopicName: (topicName)=> dispatch(topicNameActionCreator(topicName)),
     publish: (request) => dispatch(publishActionCreator(request))
   });
   export default withStyles(styles)(

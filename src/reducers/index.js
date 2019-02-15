@@ -9,11 +9,20 @@ export const initialState = {
   },
   player: null,
   error: null,
-  gid:null,
+  topicName:null,
   queue: {},
-  link:null
+  link:null,
+  info:null
 };
 
+const infoReducer = (state = null, action)=>{
+  switch(action.type){
+    case actions.UPDATE_TRACK:
+      return action.payload;
+    default:
+      return state;
+  }
+}
 const tokenReducer = (state=null, action)=>{
   switch(action.type){
     case actions.AUTH_SUCCEEDED:
@@ -28,11 +37,11 @@ const tokenReducer = (state=null, action)=>{
   }
 }
 
-const gidReducer = (state = null, action) =>{
+const topicNameReducer = (state = null, action) =>{
   switch(action.type){
-    case actions.UPDATE_GID:
+    case actions.UPDATE_TOPICNAME:
       return action.payload;
-    case actions.DELETE_GID:
+    case actions.DELETE_TOPICNAME:
       return null;
     default:
       return null;
@@ -92,7 +101,8 @@ export default history =>
     // songInfo: songInfoReducer,
     player: playerReducer,
     link:linkReducer,
-    gid: gidReducer,
+    topicName: topicNameReducer,
     queue: queueReducer,
-    tokens: tokenReducer
+    tokens: tokenReducer,
+    info: infoReducer
   });
